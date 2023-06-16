@@ -1,6 +1,7 @@
 from flask import Flask,render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask.globals import request
+from datetime import datetime
 
 # import pymysql
 # pymysql.install_as_MySQLdb()
@@ -17,7 +18,7 @@ class Contact(db.Model):
     name = db.Column(db.String(80), unique=False, nullable=False)
     phone_num = db.Column(db.String(13), unique=True, nullable=False)
     msg = db.Column(db.String(120), unique=False, nullable=False)
-    date = db.Column(db.String(12), unique=False, nullable=False)
+    date = db.Column(db.String(12),  nullable=True)
     email = db.Column(db.String(20), unique=True, nullable=False)
 
 
@@ -39,10 +40,15 @@ def about():
 def contact():
     if(request.method=='POST'):
         
-        name = request.form.get('name')
-        email = request.form.get('email')
-        phone = request.form.get('phone_num')
-        message = request.form.get('message')
+        
+        name = request.form.get('name');
+        email = request.form.get('email');
+        phone = request.form.get('phone_num');
+        message = request.form.get('message');
+        
+        entry=Contact(name=name,phone_num=phone,msg=message, date=datetime.now() ,email=email);
+        db.session.add(entry)
+        db.session.commit()
         
     
     # db.session.add()
